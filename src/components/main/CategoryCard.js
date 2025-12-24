@@ -32,27 +32,9 @@ const CategoryCard = () => {
     };
 
     return (
-        <div id="category-card">
-            <div className="category-cd-title">
-                <p>
-                    댕댕하네's <span>베스트 상품</span>
-                </p>
-            </div>
-
-            {/* ✅ 4개를 가로로 배치하려면 "리스트 래퍼"를 하나 두는 게 편함 */}
-            <div className="cate-card-list">
-                {pickedProducts.map((item) => (
-                    <div className="cate-card" key={item.id}>
-                        <div className="category-cd-item">
-                            <p className="cd-title">{titleById[item.id]}</p>
-
-                            {/* 이미지: JSON 경로를 getImgSrc로 변환해서 넣기 */}
-                            <img className="cd-img" src={getImgSrc(item.img1)} alt={item.prod_name} />
-
-                            <p className="cd-go">보러가기</p>
-                        </div>
-                    </div>
-                ))}
+        <div className="category-card">
+            <div className="img-card">
+            {/* <img src={require(`../../assets/images/하네스/harness/Htype1-1.png`)}/> */}
             </div>
         </div>
     );
