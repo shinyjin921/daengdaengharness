@@ -1,4 +1,4 @@
-import Option from '../detail/Option';
+// import Option from '../detail/Option';
 
 const CartItem = ({
   item,              // cartProduct.js에서 만든 장바구니 item 1개
@@ -33,7 +33,6 @@ const CartItem = ({
     onQty(item.cartKey, next);
   };
 
-  //
   const handlePlus = () => {
     if(typeof onQty !== 'function') return;
     const next = Math.max(10, Number(item.qty) + 1);
@@ -63,7 +62,7 @@ const CartItem = ({
         <p className="cart-prod-name">{item.productName}</p>
 
         {/* 옵션 (Option.js 재사용) */}
-        <div className="cart-options">
+        {/* <div className="cart-options">
           <Option
             label="사이즈"
             options={sizeOptions}
@@ -77,7 +76,7 @@ const CartItem = ({
             value={item.color}
             onChange={handleColor}
           />
-        </div>
+        </div> */}
 
         {/* 수량 */}
         <div className="cart-qty">
@@ -90,7 +89,6 @@ const CartItem = ({
         <p className="cart-sale-text">
           회원가입 시 {item.salePerc}% 할인
         </p>
-        
         {/* 상품 가격 */}
         <p className="cart-price">
           {Number(item.price).toLocaleString()}원
