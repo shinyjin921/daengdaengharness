@@ -1,9 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import productsData from "../../assets/data/products.json";
-// import { cartAdd } from "../../cart/cartProduct"; 
-// 예) cart 폴더가 src/cart/cartProduct.js 라면 위 경로가 맞고,
-// 만약 src/components/cart/cartProduct.js 이런 식이면 그에 맞게 바꿔야 해.
+import "./Info.scss";
 
 const Info = () => {
     const { productId } = useParams();
@@ -11,22 +9,17 @@ const Info = () => {
 
     const { Product: products, size: sizeOptions, color: colorOptions } = productsData;
 
-    /**
-     * ✅ productId 기반 상품 선택
-     * - 정상 접근: 해당 id 상품
-     * - fallback: 그냥 첫 상품
-     */
+    // ✅ productId 기반 상품 선택 (fallback: 첫 상품)
     const product = useMemo(() => {
         const id = Number(productId);
         return products.find((p) => p.id === id) || products[0];
     }, [productId, products]);
 
-    // ✅ 이미지 require 방식(강사님 스타일)
+    // ✅ 이미지 require (C-harness만 폴더 다름)
     const getImagePath = (imgPath) => {
         if (!imgPath || !product) return "";
         const fileName = imgPath.split("/").pop();
 
-        // C 타입만 폴더 다름
         if (product.type === "C") {
         return require(`../../assets/images/C-harness/${fileName}`);
         }
@@ -48,58 +41,42 @@ const Info = () => {
 
     if (!product) return null;
 
-    const thumbs = [product.img1, product.img2].filter(Boolean);
+    // ✅ 썸네일 3개처럼 보이게(임시: img1 재사용). img3 생기면 [img1,img2,img3]로 바꾸면 끝!
+    const thumbs = [product.img1, product.img2, product.img1].filter(Boolean);
 
     const handleMinus = () => setQty((prev) => Math.max(1, prev - 1));
     const handlePlus = () => setQty((prev) => prev + 1);
 
     const isReady = Boolean(selectedSize && selectedColor);
     const unitPrice = Number(product.origin_price) || 0;
-    const totalPrice = unitPrice * qty; // ✅ 할인 미적용(원가 * 수량)
+    const totalPrice = unitPrice * qty;
 
-    /**
-     * ✅ 장바구니 버튼 클릭 시:
-     * 1) 옵션 체크
-     * 2) cartAdd() 호출 (카트 담당자 방식)
-     * 3) /cart 이동
-     */
     const handleAddCart = () => {
         if (!isReady) {
         alert("사이즈와 색상을 선택해주세요!");
         return;
         }
 
-        // ✅ 카트 담당자 함수에 맞춰서 인자 그대로 전달
-        // cartAdd({
-        // productId: product.id,
-        // productName: product.prod_name,
-        // salePerc: product.sale_perc,     // 할인 계산 안 해도 값 자체는 전달 가능(표시용)
-        // size: selectedSize,
-        // color: selectedColor,
-        // qty,
-        // price: unitPrice,               // 할인 미적용 → origin_price 그대로
-        // img: product.img1 || "",        // JSON 경로 문자열 그대로 전달
-        // });
-
-        // ✅ 카트 페이지로 이동
+        // ✅ (지금은 Cart 담당자 방식에 맞춰 cartAdd 호출하는 형태로 갈 것)
+        // cartAdd({...}) 넣고
         navigate("/cart");
     };
 
     return (
         <section className="detail-info">
         <div className="detail-info-wrap">
-            {/* 이미지 영역 */}
+            {/* LEFT : 이미지 */}
             <div className="detail-info-media">
-            <div className="detail-info-mainImg">
+            <div className="detail-info-main">
                 <img src={getImagePath(mainImg)} alt={product.prod_name} />
             </div>
 
             <div className="detail-info-thumbs">
-                {thumbs.map((img) => (
+                {thumbs.map((img, idx) => (
                 <button
-                    key={img}
+                    key={`${img}-${idx}`}
                     type="button"
-                    className={`detail-info-thumb ${mainImg === img ? "is-active" : ""}`}
+                    className={`detail-info-thumb ${mainImg === img && idx !== 2 ? "is-active" : ""}`}
                     onClick={() => setMainImg(img)}
                 >
                     <img src={getImagePath(img)} alt="thumbnail" />
@@ -108,65 +85,80 @@ const Info = () => {
             </div>
             </div>
 
-            {/* 구매 영역 */}
+            {/* RIGHT : 구매 */}
             <div className="detail-info-buy">
-            <h1 className="detail-info-title">{product.prod_name}</h1>
-            <p className="detail-info-sub">멋드러지는 입는형 하네스</p>
+            {/* 상단 텍스트 */}
+            <div className="detail-info-buyTop">
+                <h1 className="detail-info-title">{product.prod_name}</h1>
+                <p className="detail-info-desc">
+                반려견의 움직임을 편안하게, 보호는 안정적으로 잡아주는 데일리 하네스
+                </p>
 
-            <div className="detail-info-priceRow">
-                
-                <span>{unitPrice.toLocaleString()}원</span>
+                <ul className="detail-info-bullets">
+                <li>목을 조이지 않고 가슴으로 힘을 분산시켜 산책 시 부담을 줄여줘요.</li>
+                <li>부드러운 소재로 거부감 없이 적응하기 좋아요.</li>
+                <li>가슴둘레 기준으로 사이즈 선택을 추천해요.</li>
+                </ul>
+
+                <div className="detail-info-price">￦{Number(unitPrice).toLocaleString()}원</div>
+                <p className="detail-info-coupon">회원가입 시 20% 할인 쿠폰 발급</p>
             </div>
 
-            <p className="detail-info-couponText">회원가입 시 20% 할인 쿠폰 발급</p>
-
             {/* 옵션 */}
-            <div className="detail-info-option">
-                <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)}>
-                <option value="">(필수) 사이즈 선택</option>
+            <div className="detail-info-options">
+                <select
+                className="detail-info-select"
+                value={selectedSize}
+                onChange={(e) => setSelectedSize(e.target.value)}
+                >
+                <option value="">(필수) 옵션을 선택해주세요 (사이즈)</option>
                 {sizeOptions.map((s) => (
                     <option key={s} value={s}>{s}</option>
                 ))}
                 </select>
-            </div>
 
-            <div className="detail-info-option">
-                <select value={selectedColor} onChange={(e) => setSelectedColor(e.target.value)}>
-                <option value="">(필수) 색상 선택</option>
+                <select
+                className="detail-info-select"
+                value={selectedColor}
+                onChange={(e) => setSelectedColor(e.target.value)}
+                >
+                <option value="">(필수) 옵션을 선택해주세요 (색상)</option>
                 {colorOptions.map((c) => (
                     <option key={c} value={c}>{c}</option>
                 ))}
                 </select>
             </div>
 
-            {/* 수량 + 합계 */}
+            {/* 수량/합계 박스 */}
             <div className="detail-info-summary">
-                <div className="detail-info-qty">
-                <span>(합계) 수량</span>
-                <div>
-                    <button type="button" onClick={handleMinus}>-</button>
-                    <span>{qty}</span>
-                    <button type="button" onClick={handlePlus}>+</button>
+                <div className="detail-info-summaryLeft">
+                <span className="detail-info-summaryLabel">(합계) 수량</span>
+                <div className="detail-info-qtyBox">
+                    <button type="button" className="detail-info-qtyBtn" onClick={handleMinus}>-</button>
+                    <span className="detail-info-qtyNum">{qty}</span>
+                    <button type="button" className="detail-info-qtyBtn" onClick={handlePlus}>+</button>
                 </div>
                 </div>
 
-                <div className="detail-info-total">
-                <strong>{totalPrice.toLocaleString()}원</strong>
+                <div className="detail-info-summaryRight">
+                <strong className="detail-info-total">￦{Number(totalPrice).toLocaleString()}원</strong>
                 </div>
             </div>
 
-            {/* 장바구니 */}
+            {/* 장바구니 버튼 */}
             <button
                 type="button"
                 className={`detail-info-cartBtn ${isReady ? "is-active" : ""}`}
                 onClick={handleAddCart}
             >
-                🛒 장바구니
+                <span className="detail-info-cartIcon">🛒</span>
+                <span className="detail-info-cartText">장바구니</span>
             </button>
             </div>
         </div>
         </section>
     );
-    };
+};
 
 export default Info;
+
