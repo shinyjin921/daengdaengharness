@@ -1,4 +1,5 @@
 
+
 const LifestyleVideoSection = () => {
     return (
         <section id="sec-life-video">
