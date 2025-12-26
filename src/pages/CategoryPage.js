@@ -6,6 +6,7 @@ import { gsap } from "gsap/gsap-core";
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import './CategoryPage.scss';
+import { useParams } from "react-router-dom";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -107,10 +108,28 @@ const CategoryPage = () => {
         <div className="info-text">
             <p>강아지 별로 개인차가 있을수 있습니다</p>
         </div>
-        </div>
+
+        <div className="category-best">
+          <p>댕댕하네's <span>{categoryNames[category]}</span> 베스트 상품</p>
+          <div className="cetegory-bestlist">
+            {bestList.map((item) => (
+              <ProductCard key={item.id} item={item} />
+            ))}
+          </div>
         </div>
 
-    )
+        <div className="category-prod">
+          {CardList.map((item) => (
+            <ProductCard key={item.id} item={item} />
+          ))}
+        </div>
+
+        <div className="info-text">
+          <p>강아지 별로 개인차가 있을 수 있습니다</p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-export default CategoryPage
+export default CategoryPage;

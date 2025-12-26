@@ -20,9 +20,9 @@ const Header = () => {
         {/* 메뉴 */}
         <div className="menu-list">
           <NavLink to="/category/C">의류형</NavLink>
-          <NavLink to="/category/:category">기본형</NavLink>
-          <NavLink to="/category/:category">대형견 추천</NavLink>
-          <NavLink to="/category/:category">목 편한 유형</NavLink>
+          <NavLink to="/category/H">기본형</NavLink>
+          <NavLink to="/category/L">대형견 추천</NavLink>
+          <NavLink to="/category/Y">목 편한 유형</NavLink>
         </div>
         
         {/* 아이콘 */}
