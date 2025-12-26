@@ -1,45 +1,354 @@
-@use '../assets/scss/variables';
-@use '../assets/scss/mixins' as *;
+@use "../assets/scss/variables";
+@use "../assets/scss/mixins" as *;
 
-#cart-page{
-  padding: 0 10rem;
+#cart-page {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+  background: var(--bg);
 
-  .cart-h1{
-    text-align: center;
-    padding: 5rem 0;
-    font-size: 64px;
-    font-weight: 900;
-    margin: none;
-    color: var(--color-deep-blue);
+  // 가운데 정렬 + 좌우 여백
+  padding: 0 10rem 6rem;
+
+  @include mobile {
+    padding: 0 1.25rem 5rem;
   }
 
-  .cart-top{
-    //고정되어져야함
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .user-info{ 
-      font-size: 32px;
+  // ====== 제목 ======
+  .cart-h1 {
+    text-align: center;
+    padding: 4.5rem 0 3.5rem;
+    font-size: 64px;
+    font-weight: 900;
+    color: var(--color-deep-blue);
+
+    @include mobile {
+      padding: 2.5rem 0 2rem;
+      font-size: 40px;
     }
-    .right{
-      font-size: 32px;
-      @include flex-layout(row, center, center, 2rem);
-      button{
-        font-size: 32px;
+  }
+
+  // ====== 상단 바 ======
+  .cart-top {
+    @include flex-layout(row, space-between, center, 1.5rem);
+    margin: 0 auto 2rem;
+    max-width: 1200px;
+
+    .user-info {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-deep-blue);
+
+      @include mobile {
+        font-size: 18px;
+      }
+    }
+
+    .right {
+      @include flex-layout(row, center, center, 1.25rem);
+      font-size: 18px;
+      color: var(--black);
+
+      p {
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--black);
+
+        &:hover {
+          color: var(--color-deep-blue);
+        }
+      }
+
+      button {
         border: none;
         outline: none;
-        border-radius: 1rem;
-        padding: 0.5rem 1rem;
+        border-radius: 12px;
+        padding: 0.6rem 1.2rem;
         cursor: pointer;
         background-color: var(--soft-beige);
-        &:hover{
+        font-size: 16px;
+        font-weight: 700;
+
+        &:hover {
           background-color: var(--muted-yellow);
+        }
+      }
+
+      @include mobile {
+        font-size: 14px;
+
+        button {
+          padding: 0.55rem 1rem;
+          font-size: 14px;
         }
       }
     }
   }
 
+  // ====== 비었을 때 ======
+  .cart-empty {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 5rem 0;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.5);
+    font-weight: 600;
+  }
 
+  // ====== 아이템 리스트 ======
+  .cart-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    @include flex-layout(column, flex-start, stretch, 1.8rem);
+  }
+
+  // ====== CartItem 스타일(피그마 카드 느낌) ======
+  .cart-item {
+    position: relative;
+    @include flex-layout(row, flex-start, center, 1.5rem);
+
+    // 체크박스는 카드 바깥 왼쪽에
+    .cart-check {
+      width: 44px;
+      flex: 0 0 44px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 1.2rem;
+
+      input[type="checkbox"] {
+        width: 22px;
+        height: 22px;
+        cursor: pointer;
+        accent-color: var(--color-deep-blue);
+      }
+
+      @include mobile {
+        width: 34px;
+        flex-basis: 34px;
+
+        input[type="checkbox"] {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+
+    // 카드(이미지+정보)를 한 덩어리로
+    .cart-img,
+    .cart-info {
+      background: var(--white);
+    }
+
+    // 카드 외곽 박스(실제 카드 역할은 cart-img+cart-info가 같이 함)
+    &::before {
+      content: "";
+      position: absolute;
+      left: 44px; // 체크박스 영역만큼 비우고 시작
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      z-index: 0;
+
+      @include mobile {
+        left: 34px;
+        border-radius: 14px;
+      }
+    }
+
+    // 내용이 before 위로 오게
+    > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    // 이미지 영역(왼쪽)
+    .cart-img {
+      width: 260px;
+      height: 160px;
+      border-radius: 16px 0 0 16px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .img-empty {
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.06);
+      }
+
+      @include mobile {
+        width: 120px;
+        height: 120px;
+        border-radius: 14px 0 0 14px;
+      }
+    }
+
+    // 정보 영역(오른쪽)
+    .cart-info {
+      flex: 1;
+      padding: 1.4rem 1.6rem;
+      border-radius: 0 16px 16px 0;
+
+      @include mobile {
+        padding: 1rem 1rem;
+        border-radius: 0 14px 14px 0;
+      }
+
+      .cart-prod-name {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--black);
+        margin-bottom: 0.75rem;
+
+        @include mobile {
+          font-size: 16px;
+          margin-bottom: 0.6rem;
+        }
+      }
+
+      // 옵션들(셀렉트 2개)
+      .cart-options {
+        @include flex-layout(column, flex-start, stretch, 0.55rem);
+        margin-bottom: 0.9rem;
+
+        @include mobile {
+          margin-bottom: 0.75rem;
+        }
+      }
+
+      .cart-size-select,
+      .cart-color-select {
+        width: 100%;
+        height: 44px;
+        padding: 0 44px 0 14px;
+        border: 1px solid #e6e6e6;
+        border-radius: 6px;
+        background: #fff;
+        font-size: 13px;
+
+        &:focus {
+          outline: none;
+          border-color: rgba(15, 78, 119, 0.35);
+          box-shadow: 0 0 0 3px rgba(15, 78, 119, 0.12);
+        }
+      }
+
+      .cart-bottom-row {
+        // 수량 + 가격 라인
+        .cart-qty {
+          @include flex-layout(row, flex-end, center, 0.6rem);
+
+          button {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #e6e6e6;
+            background: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 800;
+            &:hover {
+              background: rgba(0, 0, 0, 0.04);
+            }
+          }
+
+          span {
+            min-width: 22px;
+            text-align: center;
+            font-weight: 700;
+          }
+
+          @include mobile {
+            justify-content: flex-start;
+          }
+        }
+
+        .cart-sale-text {
+          font-size: 12px;
+          color: rgba(0, 0, 0, 0.45);
+          margin: 0;
+          white-space: nowrap;
+        }
+
+        .cart-price {
+          margin: 0;
+          font-size: 20px;
+          font-weight: 900;
+          color: var(--black);
+          text-align: right;
+          white-space: nowrap;
+
+          @include mobile {
+            text-align: left;
+            font-size: 18px;
+          }
+        }
+      }
+    }
+  }
+
+  // ====== 하단 합계/주문 ======
+  .cart-bottom {
+    max-width: 1200px;
+    margin: 2.6rem auto 0;
+    padding-top: 1.6rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+
+    @include flex-layout(row, space-between, center, 1rem);
+
+    .cart-total {
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--black);
+
+      @include mobile {
+        font-size: 16px;
+      }
+    }
+
+    .cart-order {
+      border: none;
+      cursor: pointer;
+      border-radius: 14px;
+      padding: 0.9rem 1.6rem;
+      font-size: 16px;
+      font-weight: 800;
+      background: var(--color-deep-blue);
+      color: var(--white);
+
+      &:hover {
+        background: var(--light-blue);
+      }
+
+      @include mobile {
+        padding: 0.8rem 1.2rem;
+        font-size: 14px;
+        border-radius: 12px;
+      }
+    }
+  }
+
+  // ====== 주문 팝업 ======
+  .cart-popup {
+    position: fixed;
+    left: 50%;
+    bottom: 2.2rem;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: var(--white);
+    padding: 0.9rem 1.2rem;
+    border-radius: 12px;
+    font-weight: 700;
+    z-index: 999;
+  }
 }

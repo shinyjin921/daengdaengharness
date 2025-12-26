@@ -108,8 +108,6 @@ const CartPage = () => {
             <CartItem
               key={item.cartKey}
               item={item}
-              sizeOptions={productData.size}
-              colorOptions={productData.color}
               onCheck={handleItemCheck} // 체크 토글
               onQty={handleQty} // 수량 변경
               onOption={handleOption}
