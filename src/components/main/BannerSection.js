@@ -3,6 +3,9 @@ import bannerImg01 from "../../assets/images/banner/Banner01.png"
 import bannerImg02 from "../../assets/images/banner/Banner02.png"
 import bannerImg03 from "../../assets/images/banner/Banner03.png"
 
+
+
+const BannerSection = () => {
 import { useEffect, useState, useRef } from "react"; 
 
 const BannerSection = () => {
