@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import productsData from "../../assets/data/products.json";
+import {cartAdd} from "../cart/cartProduct";
 import "./Info.scss";
 
 const Info = () => {
@@ -56,7 +57,16 @@ const Info = () => {
         alert("사이즈와 색상을 선택해주세요!");
         return;
         }
-
+        cartAdd({
+        productId: product.id,
+        productName: product.prod_name,
+        salePerc: product.sale_perc || 0,    // 텍스트용 할인률
+        size: selectedSize,
+        color: selectedColor,
+        qty: qty,
+        price: Number(product.origin_price) || 0, // “상품 단가” 저장 (CartPage에서 qty 곱해서 total 계산함)
+        img: product.img1 || "",              // 나중에 이미지 들어오면 표시됨
+    });
         // ✅ (지금은 Cart 담당자 방식에 맞춰 cartAdd 호출하는 형태로 갈 것)
         // cartAdd({...}) 넣고
         navigate("/cart");

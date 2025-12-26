@@ -1,4 +1,4 @@
-import Option from '../detail/Option';
+
 
 const CartItem = ({
   item,              // cartProduct.js에서 만든 장바구니 item 1개
@@ -64,19 +64,7 @@ const CartItem = ({
 
         {/* 옵션 (Option.js 재사용) */}
         <div className="cart-options">
-          <Option
-            label="사이즈"
-            options={sizeOptions}
-            value={item.size}
-            onChange={handleSize}
-          />
-
-          <Option
-            label="색상"
-            options={colorOptions}
-            value={item.color}
-            onChange={handleColor}
-          />
+          
         </div>
 
         {/* 수량 */}
